@@ -74,6 +74,7 @@ function getPrevVideos() {
 	});
 }
 
+
 function displayResults(results) {
 	nextPageToken = results.nextPageToken;
 	prevPageToken = results.prevPageToken;
@@ -84,13 +85,16 @@ function displayResults(results) {
 						<a href ="https://www.youtube.com/watch?v=${item.id.videoId}">
 							<h3>${item.snippet.title}</h3>
 						</a>
+						<a href="https://www.youtube.com/channel/${item.snippet.channelId}">
 						<p><i class="fas fa-user"></i>${item.snippet.channelTitle}<p>
+						</a>
 				</div>`
 	});	
-
+	console.log(results);
 	$('.js-search-results').html(content);
 
 }
+
 
 function nextPage() {
 	$('.js-next-btn').click(function(e) {
@@ -117,14 +121,13 @@ function getSearch() {
 }
 
 
-
 function lightBox() {
 	$('main').on('click', '.lightbox-trigger', function(e) {
 		e.preventDefault();
 		let videoId = $(this).attr('id');
 		let videoContent = 
 			`<div class="lightbox">
-				<p><i class="fas fa-times"></i></p>
+				<p>X</p>
 				<div class="videobox">
 					<iframe src="http://www.youtube.com/embed/${videoId}autoplay=1" width="960" height="447" frameborder="0" allowfullscreen></iframe>
 				</div>

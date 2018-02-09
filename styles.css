@@ -96,6 +96,24 @@ main {
 	margin-right: .5em;
 }
 
+.filter-box {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: .8em;
+}
+
+select {
+	padding: .5em;
+	margin-left: .5em;
+	outline-color: #C8C8C8;
+	border: 1px solid #d3d3d3;
+	border-radius: .4em;
+}
+
+option {
+	border-color: red;
+}
+
 .search-results {
 	margin: 1em auto .5em auto;
 	width: 100%;
@@ -114,6 +132,7 @@ img {
 	width: 100%;
 	padding: .8em;
 	border-radius: 1em;
+	cursor: pointer;
 }
 
 h3 {

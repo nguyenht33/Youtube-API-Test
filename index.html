@@ -20,7 +20,23 @@
 	         	</form>
 		     </div>	
 	     </header>
-		<main role="main">		
+		<main role="main">	
+			<div class="filter-box">
+				<select class="filter-date">
+					<option value="" disabled selected hidden>Timeline</option>
+					<option value="today">Added Today</option>
+					<option value="week">Added This Week</option>
+					<option value="month">Added This Month</option>
+				</select>
+				<select class="filter-video">
+					<option value="" disabled selected hidden>Sort By</option>					
+					<option value="relevance">Most Relevance</option>
+					<option value="recent">Most Recent</option>
+					<option value="rating">Top Rating</option>
+					<option value="view-count">Most Viewed</option>
+					<option value="length">Longest</option>
+				</select>
+			</div>	
 	        <div class="search-results js-search-results"></div>
 	        <nav role="nav">
 	        	<button class="js-prev-btn nav-btn"><i class="fas fa-arrow-left"></i></button>
