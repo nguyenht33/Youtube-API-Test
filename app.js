@@ -21,6 +21,23 @@ function getVideos() {
 	});
 } 
 
+function getPopularVideo() {
+	let data = {
+		chart: 'mostPopular',
+		part: 'snippet',
+		maxResults: 24,                                                                       
+		key: apiKey, 
+		type: 'video'
+	}
+                                     
+	$.ajax({                                                                   
+	  dataType: 'json',
+	  url: URL,
+	  data: data,
+	  success: displayResults
+	});
+}
+
 function getNextVideos() {
 	let data = {
 		q: searchTerm,
@@ -63,7 +80,7 @@ function displayResults(results) {
 
 	let content = results.items.map(function(item) {
 		return `<div class="thumbnail-box">
-						<img src="${item.snippet.thumbnails.medium.url}">
+						<img src="${item.snippet.thumbnails.medium.url}" class="lightbox-trigger">
 						<a href ="https://www.youtube.com/watch?v=${item.id.videoId}">
 							<h3>${item.snippet.title}</h3>
 						</a>
@@ -99,21 +116,34 @@ function getSearch() {
 	});
 }
 
-function getPopularVideo() {
-	let data = {
-		chart: 'mostPopular',
-		part: 'snippet',
-		maxResults: 24,                                                                       
-		key: apiKey, 
-		type: 'video'
-	}
-                                     
-	$.ajax({                                                                   
-	  dataType: 'json',
-	  url: URL,
-	  data: data,
-	  success: displayResults
+
+
+function lightBox() {
+	$('main').on('click', '.lightbox-trigger', function(e) {
+		e.preventDefault();
+		let videoId = $(this).attr('id');
+		let videoContent = 
+			`<div class="lightbox">
+				<p><i class="fas fa-times"></i></p>
+				<div class="videobox">
+					<iframe src="http://www.youtube.com/embed/${videoId}autoplay=1" width="960" height="447" frameborder="0" allowfullscreen></iframe>
+				</div>
+			</div>`;
+		let video = `<iframe src="http://www.youtube.com/embed/${videoId}autoplay=1" width="960" height="447" frameborder="0" allowfullscreen></iframe>`
+
+		if ($('.lightbox').length > 0) {
+			$('.videobox').html(video);
+			$('.lightbox').show('fast');
+		} else {
+			$('body').append(videoContent);
+		}
 	});
+}
+
+function closeBox() {
+	$('body').on('click', '.lightbox', function() {
+		$('.lightbox').hide();
+	})
 }
 
 function init() {
@@ -121,6 +151,8 @@ function init() {
 	getSearch();
 	nextPage();
 	prevPage();
+	lightBox();
+	closeBox();
 }
 
 $(init)
