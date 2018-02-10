@@ -95,7 +95,6 @@ function displayResults(results) {
 
 }
 
-
 function nextPage() {
 	$('.js-next-btn').click(function(e) {
 		e.preventDefault();

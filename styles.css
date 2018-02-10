@@ -61,16 +61,13 @@ input[type="text"] {
 	padding-left: .5em;
 }
 
-input:focus {
-	outline-color: #C8C8C8;
-}
-
 .search-btn {
 	width: 14%;
 	height: 3em;
 	vertical-align: middle;	
 	background-color: #C0C0C0;	
 	border: 1px solid #d3d3d3;
+	cursor: pointer;
 }
 
 .fa-search {
@@ -158,7 +155,7 @@ p {
 nav {
 	display: flex;
 	justify-content: space-between;
-	margin: 1em auto;
+	margin: .5em auto;
 	width: 99%;
 }
 
@@ -168,6 +165,7 @@ nav {
 	border: none;
 	background-color: #C0C0C0;
 	border: 1px solid #d3d3d3;
+	cursor: pointer;
 }
 
 .nav-btn:hover {
@@ -227,6 +225,7 @@ nav {
 		width: 100%;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
+		grid-column-gap: 10px;
 	}
 
 	.thumbnail-box {
