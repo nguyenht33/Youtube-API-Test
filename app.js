@@ -4,6 +4,7 @@ let searchTerm;
 let nextPageToken;
 let prevPageToken;
 
+
 function getVideos() {
 	let data = {
 		q: searchTerm,
@@ -22,6 +23,7 @@ function getVideos() {
 } 
 
 function getPopularVideo() {
+	$('.spinner').show();
 	let data = {
 		chart: 'mostPopular',
 		part: 'snippet',
@@ -81,32 +83,40 @@ function displayResults(results) {
 
 	let content = results.items.map(function(item) {
 		return `<div class="thumbnail-box">
-						<img src="${item.snippet.thumbnails.medium.url}" class="lightbox-trigger">
-						<a href ="https://www.youtube.com/watch?v=${item.id.videoId}">
-							<h3>${item.snippet.title}</h3>
-						</a>
-						<a href="https://www.youtube.com/channel/${item.snippet.channelId}">
-						<p><i class="fas fa-user"></i>${item.snippet.channelTitle}<p>
-						</a>
-				</div>`
-	});	
-	console.log(results);
-	$('.js-search-results').html(content);
+					<div class="img-box">
+						<img src="${item.snippet.thumbnails.medium.url}" class="lightbox-trigger thumbnail-img" id="${item.id.videoId}">
+						<div class="overlay-box">
+							<div class="play-overlay">
+								<a href="#"><i class="far fa-play-circle fa-5x"></i></a>
+							</div>
+						</div>
+					</div>
+					<a href ="https://www.youtube.com/watch?v=${item.id.videoId}" target="_blank">
+					<h3>${item.snippet.title}</h3>
+					</a>
+					<a href="https://www.youtube.com/channel/${item.snippet.channelId}" target="_blank">
+					<p><i class="fas fa-user"></i>${item.snippet.channelTitle}<p>
+					</a>
+				<div>`
+	});
 
+	$('.js-search-results').html(content);
+	$('img').on('load', function() {
+		$('.loader').removeClass('loading-img');
+	});
 }
 
-function nextPage() {
+
+function pageHandler() {
 	$('.js-next-btn').click(function(e) {
 		e.preventDefault();
 		getNextVideos();
 	});
-}
 
-function prevPage() {
 	$('.js-prev-btn').click(function(e) {
 		e.preventDefault();
 		getPrevVideos();
-	})
+	});
 }
 
 function getSearch() {
@@ -140,21 +150,19 @@ function lightBox() {
 			$('body').append(videoContent);
 		}
 	});
-}
 
-function closeBox() {
 	$('body').on('click', '.lightbox', function() {
 		$('.lightbox').hide();
 	})
 }
 
+
 function init() {
 	getPopularVideo();
 	getSearch();
-	nextPage();
-	prevPage();
+	pageHandler();
 	lightBox();
-	closeBox();
+
 }
 
 $(init)
