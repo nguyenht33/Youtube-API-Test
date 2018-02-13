@@ -23,53 +23,17 @@ function getVideos() {
 } 
 
 function getPopularVideo() {
-	$('.spinner').show();
 	let data = {
 		chart: 'mostPopular',
 		part: 'snippet',
-		maxResults: 24,                                                                       
+		maxResults: 24,
+		order: 'date',                                                                       
 		key: apiKey, 
 		type: 'video'
 	}
                                      
 	$.ajax({                                                                   
 	  dataType: 'json',
-	  url: URL,
-	  data: data,
-	  success: displayResults
-	});
-}
-
-function getNextVideos() {
-	let data = {
-		q: searchTerm,
-		part: 'snippet',
-		maxResults: 24,                                                                       
-		key: apiKey,  
-		pageToken: nextPageToken, 
-		type: 'video'
-	}
-                                     
-	$.ajax({                                                                   
-	  dataType: "json",
-	  url: URL,
-	  data: data,
-	  success: displayResults
-	});
-}
-
-function getPrevVideos() {
-	let data = {
-		q: searchTerm,
-		part: 'snippet',
-		maxResults: 24,                                                                       
-		key: apiKey,  
-		pageToken: prevPageToken, 
-		type: 'video'
-	}
-                                     
-	$.ajax({                                                                   
-	  dataType: "json",
 	  url: URL,
 	  data: data,
 	  success: displayResults
@@ -130,6 +94,42 @@ function getBestRated() {
 	});
 }
 
+function getNextVideos() {
+	let data = {
+		q: searchTerm,
+		part: 'snippet',
+		maxResults: 24,                                                                       
+		key: apiKey,  
+		pageToken: nextPageToken, 
+		type: 'video'
+	}
+                                     
+	$.ajax({                                                                   
+	  dataType: "json",
+	  url: URL,
+	  data: data,
+	  success: displayResults
+	});
+}
+
+function getPrevVideos() {
+	let data = {
+		q: searchTerm,
+		part: 'snippet',
+		maxResults: 24,                                                                       
+		key: apiKey,  
+		pageToken: prevPageToken, 
+		type: 'video'
+	}
+                                     
+	$.ajax({                                                                   
+	  dataType: "json",
+	  url: URL,
+	  data: data,
+	  success: displayResults
+	});
+}
+
 function displayResults(results) {
 	nextPageToken = results.nextPageToken;
 	prevPageToken = results.prevPageToken;
@@ -139,7 +139,7 @@ function displayResults(results) {
 					<div class="img-box">
 						<img src="${item.snippet.thumbnails.medium.url}" class="lightbox-trigger thumbnail-img" id="${item.id.videoId} alt="click to play video in lightbox">
 						<div class="overlay-box">
-							<div class="play-overlay">
+							<div class="play-overlay lightbox-trigger">
 								<a href="#"><i class="far fa-play-circle fa-5x"></i></a>
 							</div>
 						</div>
@@ -154,6 +154,7 @@ function displayResults(results) {
 	});
 
 	$('.js-search-results').html(content);
+
 	$('img').on('load', function() {
 		$('.loader').removeClass('loading-img');
 	});
@@ -172,10 +173,9 @@ function pageHandler() {
 }
 
 function filterHandler() {
-	$('.filter-video').change(function (e) {
+	$('.filter-video').change(function(e) {
 		e.preventDefault();
-		let filter = $('this').val();
-		alert(filter);
+		const filter = $('.filter-video').val()
 		if (filter === 'recent') {
 			getMostRecent();
 		} else if (filter === 'rating') {
@@ -188,8 +188,8 @@ function filterHandler() {
 	});
 }
 
-function getFilter() {
-	let filter = $('.filter-video').val();
+function filterStatus() {
+	const filter = $('.filter-video').val()
 	if (filter === 'recent') {
 		getMostRecent();
 	} else if (filter === 'rating') {
@@ -207,7 +207,7 @@ function getSearch() {
 		const queryTarget = $(event.currentTarget).find('.js-query');
 		searchTerm = queryTarget.val();
 		queryTarget.val("");
-		getFilter(searchTerm);
+		filterStatus();
 	});
 }
 
@@ -231,19 +231,26 @@ function lightBox() {
 			$('body').append(videoContent);
 		}
 	});
-
-	$('body').on('click', '.lightbox', function() {
-		$('.lightbox').hide();
-	})
+	closeBox();
 }
 
+function closeBox() {
+	$('body').on('click', '.lightbox', function() {
+		$('.lightbox').hide();
+	});
+	$(document).keyup(function(e) {
+		if (e.keyCode == 27) {
+			$('.lightbox').hide();
+		}
+	});
+}
 
 function init() {
 	getPopularVideo();
 	getSearch();
 	pageHandler();
-	lightBox();
 	filterHandler();
+	lightBox();
 }
 
 $(init)
