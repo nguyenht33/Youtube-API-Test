@@ -4,7 +4,6 @@ let searchTerm;
 let nextPageToken;
 let prevPageToken;
 
-
 function getVideos() {
 	let data = {
 		q: searchTerm,
@@ -94,6 +93,24 @@ function getBestRated() {
 	});
 }
 
+function getDate(date) {
+	let data = {
+		q: searchTerm,
+		part: 'snippet',
+		maxResults: 24, 		
+		publishedAfter: date,                                                            
+		key: apiKey,  
+		type: 'video'
+	}
+                                     
+	$.ajax({                                                                   
+	  dataType: "json",
+	  url: URL,
+	  data: data,
+	  success: displayResults
+	});
+}
+
 function getNextVideos() {
 	let data = {
 		q: searchTerm,
@@ -154,7 +171,6 @@ function displayResults(results) {
 	});
 
 	$('.js-search-results').html(content);
-
 	$('img').on('load', function() {
 		$('.loader').removeClass('loading-img');
 	});
@@ -175,7 +191,7 @@ function pageHandler() {
 function filterHandler() {
 	$('.filter-video').change(function(e) {
 		e.preventDefault();
-		const filter = $('.filter-video').val()
+		const filter = $('.filter-video').val();
 		if (filter === 'recent') {
 			getMostRecent();
 		} else if (filter === 'rating') {
@@ -201,6 +217,65 @@ function filterStatus() {
 	}
 }
 
+function ISODateString(d){
+	function pad(n){return n<10 ? '0'+n : n}
+	let date = d.getUTCFullYear()+'-'
+	+ pad(d.getUTCMonth()+1)+'-'
+	+ pad(d.getUTCDate())+'T'
+	+ pad(d.getUTCHours())+':'
+	+ pad(d.getUTCMinutes())+':'
+	+ pad(d.getUTCSeconds())+'Z'
+	getDate(date);
+}
+
+function getDateToday() {
+	let d = new Date();
+	d.setHours(d.getHours() - 24);
+	ISODateString(d);
+}
+
+function getDateThisWeek() {
+	let d = new Date();
+	d.setDate(d.getDate()-7);
+	ISODateString(d);
+}
+
+function getDateThisMonth() {
+	let d = new Date();
+	d.setDate(1);
+	ISODateString(d);
+}
+
+function getDateThreeMonths() {
+	let d = new Date();
+	d.setMonth(d.getMonth()-2);
+	ISODateString(d);
+}
+
+function getDateThisYear() {
+	let d = new Date();
+	d.setMonth(d.getMonth()-12);
+	ISODateString(d);
+}
+
+function timelineHandler() {
+	$('.filter-date').change(function(e) {
+		e.preventDefault();
+		const time = $('.filter-date').val();
+		if (time === 'year') {
+			getDateThisYear();
+		} else if (time === '3-months') {
+			getDateThreeMonths();
+		} else if (time === 'month') {
+			getDateThisMonth();
+		} else if (time === 'week') {
+			getDateThisWeek();
+		} else {
+			getDateToday();
+		}
+	});
+}
+
 function getSearch() {
 	$('.js-search-form').on('submit', function(e) {
 		e.preventDefault();
@@ -208,6 +283,12 @@ function getSearch() {
 		searchTerm = queryTarget.val();
 		queryTarget.val("");
 		filterStatus();
+	});
+}
+
+function goToHomePage() {
+	$('.search-banner h1').on('click', function() {
+		window.location.reload();  
 	});
 }
 
@@ -248,8 +329,10 @@ function closeBox() {
 function init() {
 	getPopularVideo();
 	getSearch();
-	pageHandler();
+	timelineHandler();
 	filterHandler();
+	pageHandler();	
+	goToHomePage();
 	lightBox();
 }
 
