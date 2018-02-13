@@ -76,6 +76,59 @@ function getPrevVideos() {
 	});
 }
 
+function getMostRecent() {
+	let data = {
+		q: searchTerm,
+		part: 'snippet',
+		maxResults: 24,                                                                       
+		key: apiKey,  
+		order: 'date',
+		type: 'video'
+	}
+                                     
+	$.ajax({                                                                   
+	  dataType: "json",
+	  url: URL,
+	  data: data,
+	  success: displayResults
+	});
+}
+
+function getMostViewed() {
+	let data = {
+		q: searchTerm,
+		part: 'snippet',
+		maxResults: 24,                                                                       
+		key: apiKey,  
+		order: 'viewCount',
+		type: 'video'
+	}
+                                     
+	$.ajax({                                                                   
+	  dataType: "json",
+	  url: URL,
+	  data: data,
+	  success: displayResults
+	});
+}
+
+function getBestRated() {
+	let data = {
+		q: searchTerm,
+		part: 'snippet',
+		maxResults: 24,                                                                       
+		key: apiKey,  
+		order: 'rating',
+		type: 'video'
+	}
+                                     
+	$.ajax({                                                                   
+	  dataType: "json",
+	  url: URL,
+	  data: data,
+	  success: displayResults
+	});
+}
 
 function displayResults(results) {
 	nextPageToken = results.nextPageToken;
@@ -84,7 +137,7 @@ function displayResults(results) {
 	let content = results.items.map(function(item) {
 		return `<div class="thumbnail-box">
 					<div class="img-box">
-						<img src="${item.snippet.thumbnails.medium.url}" class="lightbox-trigger thumbnail-img" id="${item.id.videoId}">
+						<img src="${item.snippet.thumbnails.medium.url}" class="lightbox-trigger thumbnail-img" id="${item.id.videoId} alt="click to play video in lightbox">
 						<div class="overlay-box">
 							<div class="play-overlay">
 								<a href="#"><i class="far fa-play-circle fa-5x"></i></a>
@@ -106,7 +159,6 @@ function displayResults(results) {
 	});
 }
 
-
 function pageHandler() {
 	$('.js-next-btn').click(function(e) {
 		e.preventDefault();
@@ -119,16 +171,45 @@ function pageHandler() {
 	});
 }
 
+function filterHandler() {
+	$('.filter-video').change(function (e) {
+		e.preventDefault();
+		let filter = $('this').val();
+		alert(filter);
+		if (filter === 'recent') {
+			getMostRecent();
+		} else if (filter === 'rating') {
+			getBestRated();
+		} else if (filter === 'viewCount') {
+			getMostViewed();
+		} else {
+			getVideos();
+		}
+	});
+}
+
+function getFilter() {
+	let filter = $('.filter-video').val();
+	if (filter === 'recent') {
+		getMostRecent();
+	} else if (filter === 'rating') {
+		getBestRated();
+	} else if (filter === 'viewCount') {
+		getMostViewed();
+	} else {
+		getVideos();
+	}
+}
+
 function getSearch() {
 	$('.js-search-form').on('submit', function(e) {
 		e.preventDefault();
 		const queryTarget = $(event.currentTarget).find('.js-query');
 		searchTerm = queryTarget.val();
 		queryTarget.val("");
-		getVideos(searchTerm);
+		getFilter(searchTerm);
 	});
 }
-
 
 function lightBox() {
 	$('main').on('click', '.lightbox-trigger', function(e) {
@@ -162,7 +243,7 @@ function init() {
 	getSearch();
 	pageHandler();
 	lightBox();
-
+	filterHandler();
 }
 
 $(init)
